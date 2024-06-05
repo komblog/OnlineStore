@@ -19,7 +19,7 @@ namespace OnlineStore.Data
                 new Category { CategoryId=3, Name="Romance", DisplayOrder=3},
                 new Category { CategoryId=4, Name="History", DisplayOrder=4},
                 new Category { CategoryId=5, Name="War", DisplayOrder=5}
-                );
+            );
         }
     }
 }
