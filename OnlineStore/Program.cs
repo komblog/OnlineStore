@@ -1,3 +1,5 @@
+using DataAccess.Repository;
+using DataAccess.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Data;
 
@@ -8,7 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"))
 );
-
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

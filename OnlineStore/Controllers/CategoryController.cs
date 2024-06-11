@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineStore.Data;
-using OnlineStore.Models;
+using Models;
+using DataAccess.Repository.Interface;
 
 namespace OnlineStore.Controllers
 {
 	public class CategoryController : Controller
 	{
-		private ApplicationDbContext _db;
-		public CategoryController(ApplicationDbContext db)
+		private ICategoryRepository _categoryRepository;
+		public CategoryController(ICategoryRepository db)
 		{
-			_db = db;
+            _categoryRepository = db;
 		}
 		public IActionResult Index()
 		{
-			List<Category> categories = _db.Category.ToList();
+			List<Category> categories = _categoryRepository.GetAll().ToList();
 			return View(categories);
 		}
 
@@ -27,8 +27,8 @@ namespace OnlineStore.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				_db.Category.Add(obj);
-				_db.SaveChanges();
+				_categoryRepository.Add(obj);
+				_categoryRepository.Save();
 				TempData["success"] = "Category created successfully";
 				return RedirectToAction("Index");
 			}
@@ -42,7 +42,7 @@ namespace OnlineStore.Controllers
 				return NotFound();
 			}
 
-			Category? category = _db.Category.FirstOrDefault(x => x.CategoryId == CategoryId);
+			Category? category = _categoryRepository.Get(x => x.CategoryId == CategoryId);
 			if (category == null)
 			{
 				return NotFound();
@@ -56,8 +56,8 @@ namespace OnlineStore.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				_db.Category.Update(category);
-				_db.SaveChanges();
+				_categoryRepository.Update(category);
+				_categoryRepository.Save();
 				TempData["success"] = "Category updated successfully";
 				return RedirectToAction("Index");
 			}
@@ -71,7 +71,7 @@ namespace OnlineStore.Controllers
 				return NotFound();
 			}
 
-			Category? category = _db.Category.Where(x => x.CategoryId == CategoryId).FirstOrDefault();
+			Category? category = _categoryRepository.Get(x => x.CategoryId == CategoryId);
 			if (category == null)
 			{
 				return NotFound();
@@ -82,13 +82,13 @@ namespace OnlineStore.Controllers
 		[HttpPost]
 		public IActionResult Delete(Category category)
 		{
-			Category? categoryToDelete = _db.Category.FirstOrDefault(x=> x.CategoryId ==category.CategoryId);
+			Category? categoryToDelete = _categoryRepository.Get(x=> x.CategoryId ==category.CategoryId);
 			if (categoryToDelete == null)
 			{
 				return NotFound();
 			}
-			_db.Category.Remove(categoryToDelete);
-			_db.SaveChanges();
+			_categoryRepository.Delete(categoryToDelete);
+			_categoryRepository.Save();
 			TempData["success"] = "Category deleted successfully";
 			return RedirectToAction("Index");
 		}

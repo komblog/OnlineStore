@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnlineStore.Models;
+using Models;
 
 namespace OnlineStore.Data
 {
